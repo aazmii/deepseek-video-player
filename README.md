@@ -1,3 +1,3 @@
 # video_player_app
 
-A new Flutter project.
+A video player that lets the user analyze video frame by frame. 
