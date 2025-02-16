@@ -1,7 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-
-import 'view/video.player.screen.new.dart';
+import 'package:video_player_app/src/video.players/dev.player/dev.player.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -26,7 +25,8 @@ class HomeView extends StatelessWidget {
     if (result != null && context.mounted) {
       String videoPath = result.files.single.path!;
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return VideoPlayerScreenNew(videoPath: videoPath);
+        // return VideoTimeline(videoPath: videoPath);
+        return DevPlayer(videoPath: videoPath);
       }));
     }
   }

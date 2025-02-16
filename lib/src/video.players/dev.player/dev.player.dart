@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:video_player_app/src/extensions/extensions.dart';
 
-class VideoPlayerScreen extends StatefulWidget {
+class DevPlayer extends StatefulWidget {
   final String videoPath;
 
-  const VideoPlayerScreen({super.key, required this.videoPath});
+  const DevPlayer({super.key, required this.videoPath});
 
   @override
   FrameByFramePlayerState createState() => FrameByFramePlayerState();
 }
 
-class FrameByFramePlayerState extends State<VideoPlayerScreen> {
+class FrameByFramePlayerState extends State<DevPlayer> {
   late VideoPlayerController _controller;
   bool isPlaying = false;
   double frameRate = 30.0; // Change based on video FPS
@@ -125,11 +126,11 @@ class FrameByFramePlayerState extends State<VideoPlayerScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _formatDuration(_controller.value.position),
+                          _controller.value.position.toTwoDigitsString,
                           style: TextStyle(color: Colors.white),
                         ),
                         Text(
-                          _formatDuration(videoDuration),
+                          videoDuration.toTwoDigitsString,
                           style: TextStyle(color: Colors.white),
                         ),
                       ],
@@ -141,13 +142,6 @@ class FrameByFramePlayerState extends State<VideoPlayerScreen> {
         ],
       ),
     );
-  }
-
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String minutes = twoDigits(duration.inMinutes.remainder(60));
-    String seconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$minutes:$seconds";
   }
 
   @override

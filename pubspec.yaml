@@ -16,6 +16,7 @@ dependencies:
     git:
       url: https://github.com/Shahidbangash/video_thumbnail.git 
       ref: master 
+  path_provider: ^2.1.5
 
 
 dev_dependencies:

@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_player_app/src/extensions/extensions.dart';
 
-import '../controller/toggle.controle.dart';
-import '../controller/video.controller.dart';
+import 'controller/toggle.controle.dart';
+import 'controller/video.controller.dart';
 
 final _animationDuraiton = Duration(milliseconds: 500);
 
-class VideoPlayerScreenNew extends StatelessWidget {
-  const VideoPlayerScreenNew({super.key, required this.videoPath});
+class GetxPlayer extends StatelessWidget {
+  const GetxPlayer({super.key, required this.videoPath});
   final String videoPath;
   @override
   Widget build(BuildContext context) {
@@ -55,9 +55,6 @@ class VideoPlayerScreenNew extends StatelessWidget {
                   ),
                 ),
               )),
-
-          // Timeline & Slider at Bottom
-          ///rename it to VideoControls
           Obx(
             () => AnimatedOpacity(
               opacity: showVideoControls.value ? 1.0 : 0.0,
