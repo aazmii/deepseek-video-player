@@ -12,6 +12,10 @@ dependencies:
     sdk: flutter
   video_player: ^2.9.2
   get: ^4.7.2
+  video_thumbnail: 
+    git:
+      url: https://github.com/Shahidbangash/video_thumbnail.git 
+      ref: master 
 
 
 dev_dependencies:
