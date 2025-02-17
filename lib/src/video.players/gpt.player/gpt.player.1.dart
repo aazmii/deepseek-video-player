@@ -2,12 +2,12 @@ import 'dart:io' show File;
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:video_player_app/src/video.players/steteful.video.player/generate.thumbnails.dart'
+import 'package:video_player_app/src/video.players/helper.dart'
     show generateThumbnails;
 
 class GPTPlayerWithTimeline extends StatefulWidget {
   final String videoPath;
-  const GPTPlayerWithTimeline({required this.videoPath, Key? key}) : super(key: key);
+  const GPTPlayerWithTimeline({required this.videoPath, super.key});
 
   @override
   State<GPTPlayerWithTimeline> createState() => _VideoTimelineState();

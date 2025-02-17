@@ -39,3 +39,33 @@ Future<List<File>> generateThumbnails(String videoPath) async {
 
   return thumbnailFiles;
 }
+
+Future<List<File>> getThumbnails(String videoPath, Duration videoDuration) async {
+  List<File> thumbnailFiles = [];
+  final tempDir = await getTemporaryDirectory();
+
+  try {
+    final duration = videoDuration.inSeconds;
+
+    for (int i = 0; i < duration; i += 2) {
+      final String filePath = '${tempDir.path}/thumb_$i.jpg';
+
+      final Uint8List? thumbnailData = await VideoThumbnail.thumbnailData(
+        video: videoPath,
+        imageFormat: ImageFormat.JPEG,
+        timeMs: i * 1000, // Convert seconds to milliseconds
+        quality: 75,
+      );
+
+      if (thumbnailData != null) {
+        final File thumbnailFile = File(filePath);
+        await thumbnailFile.writeAsBytes(thumbnailData);
+        thumbnailFiles.add(thumbnailFile);
+      }
+    }
+  } catch (e) {
+    debugPrint("Error generating thumbnails: $e");
+  }
+
+  return thumbnailFiles;
+}

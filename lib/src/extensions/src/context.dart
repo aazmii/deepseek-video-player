@@ -1,9 +1,10 @@
 part of '../extensions.dart';
 
 extension ContextExt on BuildContext {
-  MediaQueryData get mediaQuery => MediaQuery.of(this);
-  bool get isPotrait => mediaQuery.orientation == Orientation.portrait;
-  double get screenWidth => mediaQuery.size.width;
-  double get screenHeight => mediaQuery.size.height;
+  MediaQueryData get mq => MediaQuery.of(this);
+  double get width => mq.size.width;
+  bool get isPotrait => mq.orientation == Orientation.portrait;
+  double get screenWidth => mq.size.width;
+  double get screenHeight => mq.size.height;
   double get acpectRatio => screenWidth / screenHeight;
 }
