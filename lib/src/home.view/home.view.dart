@@ -19,15 +19,12 @@ class HomeView extends StatelessWidget {
   }
 
   _pickVideoAndShowVideoPlayer(BuildContext context) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.video,
-    );
-    if (result != null && context.mounted) {
-      String videoPath = result.files.single.path!;
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        // return VideoTimeline(videoPath: videoPath);
-        return DevPlayer(videoPath: videoPath);
-      }));
-    }
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.video);
+    if (result == null || !context.mounted) return;
+    String videoPath = result.files.first.path!;
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      // return VideoTimeline(videoPath: videoPath);
+      return DevPlayerScreen(videoPath: videoPath);
+    }));
   }
 }
