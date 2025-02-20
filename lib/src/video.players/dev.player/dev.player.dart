@@ -1,12 +1,13 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_player_app/src/extensions/extensions.dart';
-import 'package:video_player_app/src/video.players/dev.player/components/video.timeline.dart';
 import 'package:video_player_app/src/video.players/helper.dart';
 
 late VideoPlayerController _controller;
+const _thumbnailWidth = 100.0;
 
 class DevPlayerScreen extends StatefulWidget {
   final String videoPath;
@@ -185,6 +186,156 @@ class _VideoWithOptionState extends State<VideoWithOption> {
             ),
           ),
       ],
+    );
+  }
+}
+
+class VideoTimeline extends StatefulWidget {
+  const VideoTimeline({super.key, required this.thumbnails});
+  final List<File> thumbnails;
+
+  @override
+  State<VideoTimeline> createState() => _VideoTimelineState();
+}
+
+class _VideoTimelineState extends State<VideoTimeline> {
+  final int frameIntervalMs = 500; // Thumbnails every 500ms
+  late ScrollController _scrollController;
+  // Timer? _scrollTimer;
+
+  void _syncScroll() {
+    if (!_controller.value.isPlaying) return;
+
+    double currentPositionMs = _controller.value.position.inMilliseconds.toDouble();
+
+    // Ensure frameIntervalMs isn't zero to avoid division by zero
+    if (frameIntervalMs == 0) return;
+
+    // Map video position to scroll offset
+    double scrollOffset = (currentPositionMs / frameIntervalMs) * _thumbnailWidth;
+
+    // Clamp to avoid overscrolling
+    double maxScrollExtent = _scrollController.position.maxScrollExtent;
+    scrollOffset = scrollOffset.clamp(0, maxScrollExtent);
+
+    // If the offset difference is large, use jumpTo; otherwise, animate for smooth movement
+    if ((_scrollController.offset - scrollOffset).abs() > _thumbnailWidth * 2) {
+      _scrollController.jumpTo(scrollOffset);
+    } else {
+      _scrollController.animateTo(
+        scrollOffset,
+        duration: Duration(milliseconds: 300), // Slightly slower for smoothness
+        curve: Curves.linear,
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _controller.addListener(_syncScroll);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // print(getNumberOfEmptyBoxes(context));
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: SizedBox(
+            height: 80,
+            width: double.infinity,
+            child: ListView.builder(
+              controller: _scrollController,
+              physics: BouncingScrollPhysics(),
+              itemCount: widget.thumbnails.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (_, i) {
+                if (i == 0) {
+                  return Row(
+                    children: [
+                      SizedBox(width: context.width / 2),
+                      _ThumbnailFrame(thumbnail: widget.thumbnails[i], timestamp: i)
+                    ],
+                  );
+                } else if (i == widget.thumbnails.length - 1) {
+                  return Row(
+                    children: [
+                      _ThumbnailFrame(thumbnail: widget.thumbnails[i - 1], timestamp: i - 1),
+                      SizedBox(width: context.width / 2),
+                    ],
+                  );
+                } else {
+                  return _ThumbnailFrame(thumbnail: widget.thumbnails[i], timestamp: i);
+                }
+              },
+            ),
+          ),
+        ),
+        Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                color: Colors.white,
+                height: 90,
+                width: 4,
+              ),
+              Text(
+                '0.00.0',
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+}
+
+class _ThumbnailFrame extends StatelessWidget {
+  const _ThumbnailFrame({this.thumbnail, this.timestamp});
+  final File? thumbnail;
+  final int? timestamp;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(bottom: 20),
+      // color: Colors.grey,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          SizedBox(
+            width: _thumbnailWidth,
+            child: thumbnail != null ? Image.file(thumbnail!, fit: BoxFit.cover) : null,
+          ),
+          Positioned(
+            bottom: -20,
+            left: -10,
+            child: Text(
+              // timestamp!.toTwoDigitsString,
+              '$timestamp:00',
+              style: TextStyle(color: Colors.white, fontSize: 10),
+            ),
+          ),
+          Positioned(
+            bottom: -15,
+            child: CircleAvatar(
+              backgroundColor: Colors.yellow,
+              radius: 2,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
