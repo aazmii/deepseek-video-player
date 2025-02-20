@@ -157,10 +157,6 @@ class FrameByFramePlayerState extends State<DevPlayer> {
             ],
           ),
           if (thumbnails.isNotEmpty) Timeline(thumbnails: thumbnails),
-          // Text(
-          //   '0.00.0',
-          //   style: TextStyle(color: Colors.white),
-          // )
         ],
       ),
     );
@@ -178,7 +174,7 @@ class Timeline extends StatelessWidget {
   final List<File> thumbnails;
   @override
   Widget build(BuildContext context) {
-    print(getNumberOfEmptyBoxes(context));
+    // print(getNumberOfEmptyBoxes(context));
     return Stack(
       children: [
         Padding(
@@ -186,22 +182,30 @@ class Timeline extends StatelessWidget {
           child: SizedBox(
             height: 80,
             width: double.infinity,
-            child: ListView(
+            child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              itemCount: thumbnails.length,
               scrollDirection: Axis.horizontal,
-              children: [
-                ...List.generate(getNumberOfEmptyBoxes(context), (i) => ThumbnailFrame()),
-                ...List.generate(thumbnails.length, (i) => ThumbnailFrame(thumbnail: thumbnails[i], timestamp: i)),
-                ...List.generate(getNumberOfEmptyBoxes(context), (i) => ThumbnailFrame()),
-              ],
+              itemBuilder: (_, i) {
+                if (i == 0) {
+                  return Row(
+                    children: [
+                      SizedBox(width: context.width / 2),
+                      ThumbnailFrame(thumbnail: thumbnails[i], timestamp: i)
+                    ],
+                  );
+                } else if (i == thumbnails.length - 1) {
+                  return Row(
+                    children: [
+                      ThumbnailFrame(thumbnail: thumbnails[i - 1], timestamp: i - 1),
+                      SizedBox(width: context.width / 2),
+                    ],
+                  );
+                } else {
+                  return ThumbnailFrame(thumbnail: thumbnails[i], timestamp: i);
+                }
+              },
             ),
-            // child: ListView.builder(
-            //   itemBuilder: (_, i) => ThumbnailFrame(
-            //     thumbnail: thumbnails[i],
-            //     timestamp: i,
-            //   ),
-            //   itemCount: thumbnails.length,
-            //   scrollDirection: Axis.horizontal,
-            // ),
           ),
         ),
         Center(
