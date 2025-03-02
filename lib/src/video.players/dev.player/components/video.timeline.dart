@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
+import 'package:video_player_app/src/extensions/extensions.dart';
+// import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:video_player_app/src/video.players/dev.player/dev.player.dart';
 
 import 'thumbnail.frame.dart';
@@ -9,9 +10,9 @@ import 'thumbnail.frame.dart';
 const thumbnailWidth = 100.0;
 
 class VideoTimeline extends StatefulWidget {
-  const VideoTimeline({super.key, required this.thumbnails});
+  const VideoTimeline({super.key, required this.thumbnails, required this.videoPath});
   final List<File> thumbnails;
-
+  final String videoPath;
   @override
   State<VideoTimeline> createState() => _VideoTimelineState();
 }
@@ -20,7 +21,7 @@ class _VideoTimelineState extends State<VideoTimeline> {
   final int frameIntervalMs = 500; // Thumbnails every 500ms
   late ScrollController _scrollController;
   // Timer? _scrollTimer;
-
+  Duration? seekDuration;
   void _syncScroll() {
     if (!controller.value.isPlaying) return;
 
@@ -54,9 +55,10 @@ class _VideoTimelineState extends State<VideoTimeline> {
     _scrollController = ScrollController();
 
     _scrollController.addListener(() {
-      final seekingDuration = fromPercentageToDuration(_scrollPercentage());
-      controller.seekTo(seekingDuration);
+      setState(() => seekDuration = _fromPercentageToDuration(_scrollPercentage()));
+      if (seekDuration != null) controller.seekTo(seekDuration!);
     });
+    _syncScroll; //to avoid lints 
     // controller.addListener(_syncScroll);
   }
 
@@ -66,7 +68,7 @@ class _VideoTimelineState extends State<VideoTimeline> {
     return parsed > 100.0 ? 100 : parsed;
   }
 
-  Duration fromPercentageToDuration(double scrollPercentage) {
+  Duration _fromPercentageToDuration(double scrollPercentage) {
     return Duration(milliseconds: (controller.value.duration.inMilliseconds * (scrollPercentage / 100)).toInt());
   }
 
@@ -104,9 +106,9 @@ class _VideoTimelineState extends State<VideoTimeline> {
                 width: 4,
               ),
               Text(
-                '0.00.0',
+                controller.value.position.formatInHMS,
                 style: TextStyle(color: Colors.white, fontSize: 12),
-              )
+              ),
             ],
           ),
         ),

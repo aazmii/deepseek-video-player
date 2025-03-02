@@ -78,6 +78,7 @@ class _VideoWithOptionState extends State<VideoWithOption> {
             ),
           ),
         ),
+        //TODO: remove slider once the timeline is synced with video
         if (intaractable)
           Positioned(
             top: MediaQuery.of(context).size.height / 2 - 40,
@@ -109,7 +110,6 @@ class _VideoWithOptionState extends State<VideoWithOption> {
                   value: videoPosition,
                   onChanged: (value) {
                     final newPosition = Duration(milliseconds: (videoDuration.inMilliseconds * value).toInt());
-                    print('seekDuraiton $newPosition');
                     controller.seekTo(newPosition);
                     setState(() {
                       videoPosition = value;

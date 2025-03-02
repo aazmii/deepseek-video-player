@@ -69,3 +69,8 @@ Future<List<File>> getThumbnails(String videoPath, Duration videoDuration) async
 
   return thumbnailFiles;
 }
+
+Future<Uint8List?> getThumbnailFromDuration(String videoPath, Duration duration) async {
+  return await VideoThumbnail.thumbnailData(
+      video: videoPath, imageFormat: ImageFormat.JPEG, timeMs: duration.inMilliseconds, quality: 75);
+}

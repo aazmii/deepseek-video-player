@@ -46,7 +46,11 @@ class FrameByFramePlayerState extends State<DevPlayerScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Expanded(flex: 6, child: VideoWithOption()),
-                Expanded(child: VideoTimeline(thumbnails: thumbnails)),
+                Expanded(
+                    child: VideoTimeline(
+                  thumbnails: thumbnails,
+                  videoPath: widget.videoPath,
+                )),
               ],
             ),
     );
