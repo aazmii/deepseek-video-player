@@ -84,11 +84,7 @@ class _VideoWithOptionState extends State<VideoWithOption> {
             top: MediaQuery.of(context).size.height / 2 - 40,
             left: MediaQuery.of(context).size.width / 2 - 40,
             child: IconButton(
-              icon: Icon(
-                isPlaying ? Icons.pause : Icons.play_arrow,
-                color: Colors.white,
-                size: 50,
-              ),
+              icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.white, size: 50),
               onPressed: () {
                 setState(() {
                   controller.value.isPlaying ? controller.pause() : controller.play();
@@ -100,7 +96,7 @@ class _VideoWithOptionState extends State<VideoWithOption> {
         // Timeline & Slider at Bottom
         ///rename it to VideoControls
         if (intaractable)
-          Positioned(
+          Positioned(                    
             bottom: 20,
             left: 16,
             right: 16,
